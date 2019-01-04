@@ -1,28 +1,68 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Register from "./register";
+import Login from "./login";
+import Profile from "./profile";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from "react-router-dom";
 
+const isLoggedIn = () => {
+  const key = "members_accessToken";
+  let member = JSON.parse(window.localStorage.getItem(key));
+  if (member && member.accessToken) return true;
+  else return false;
+};
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        isLoggedIn() ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login"
+            }}
+          />
+        )
+      }
+    />
+  );
+};
+
+const BasicRoute = ({ component: Component, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        isLoggedIn() ? (
+          <Redirect
+            to={{
+              pathname: "/"
+            }}
+          />
+        ) : (
+          <Component {...props} />
+        )
+      }
+    />
+  );
+};
+
+const App = () => (
+  <Router>
+    <Switch>
+      <BasicRoute path="/login" component={Login} />
+      <BasicRoute path="/register" component={Register} />
+      <PrivateRoute path="/" component={Profile} />
+    </Switch>
+  </Router>
+);
 export default App;
