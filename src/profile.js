@@ -7,15 +7,9 @@ const service = new Service();
 export default class Profile extends Component {
   logout = () => {
     try {
-      service.post("Members/logout").then(res => {
-        if (res.ok) {
-          window.localStorage.setItem(
-            "members_accessToken",
-            JSON.stringify({})
-          );
-          this.props.history.push("/login");
-        }
-      });
+      service.post("Members/logout");
+      window.localStorage.setItem("members_accessToken", JSON.stringify({}));
+      this.props.history.push("/login");
     } catch (e) {}
   };
 

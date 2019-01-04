@@ -20,9 +20,7 @@ export default class Service {
       .then(data => {
         if (["head", "delete"].indexOf(method.toLowerCase()) !== -1)
           return data;
-        let isJSON = data.headers.get(
-          "content-type".includes("application/json")
-        );
+        let isJSON = data.headers.get("Content-Type").includes("application/json")
         return isJSON ? data.json() : data;
       })
       .catch(err => {

@@ -16,18 +16,14 @@ export default class Login extends Component {
 
   login = member => {
     this.service.post("Members/login", { ...member }).then(res => {
-      if (res && !res.ok) {
-        res.json().then(res1 => {
-          alert(res1.error.message);
-        });
+      if (res && res.error) {
+        alert(res.error.message);
       } else {
-        res.json().then(data => {
-          window.localStorage.setItem(
-            "members_accessToken",
-            JSON.stringify({ accessToken: data && data.id })
-          );
-          this.props.history.push(`/`);
-        });
+        window.localStorage.setItem(
+          "members_accessToken",
+          JSON.stringify({ accessToken: res && res.id })
+        );
+        this.props.history.push(`/`);
       }
     });
   };

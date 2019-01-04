@@ -30,10 +30,8 @@ class Register extends Component {
       alert("password not matched");
     } else {
       this.service.post("Members", { ...member }).then(res => {
-        if (res && !res.ok) {
-          res.json().then(res1 => {
-            alert(res1.error.message);
-          });
+        if (res && res.error) {
+          alert(res.error.message);
         }
       });
     }
